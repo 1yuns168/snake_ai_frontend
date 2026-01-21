@@ -2,7 +2,9 @@ import { ref, reactive } from 'vue';
 
 export function useOnlineGame() {
   const socket = ref(null);
-  const SERVER_URL = 'ws://localhost:8765/ws';
+  const SERVER_URL = import.meta.env.VITE_WS_URL;
+
+  socket.value = new WebSocket(SERVER_URL);
   
   const onlineGameState = reactive({
     myId: null,
@@ -39,12 +41,9 @@ export function useOnlineGame() {
   };
 
   const connect = (userData, callbacks) => {
-    console.log("開始連線 WebSocket...");
     socket.value = new WebSocket(SERVER_URL);
 
     socket.value.onopen = () => {
-      console.log("WebSocket Connected! Sending join payload...");
-      
       let backendMode = "DQN";
       if (userData.mode === 2) {
         backendMode = "NEAT";
@@ -198,7 +197,6 @@ export function useOnlineGame() {
 
   const sendInput = (dir) => {
     if (socket.value && socket.value.readyState === WebSocket.OPEN) {
-      console.log("[ONLINE] 發送方向:", dir);
       socket.value.send(JSON.stringify({ t: "in", d: dir }));
     }
   };
