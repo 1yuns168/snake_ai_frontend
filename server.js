@@ -9,7 +9,6 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 提供打包後的靜態檔案
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // WebSocket 代理到 Azure 後端
@@ -24,7 +23,7 @@ app.use('/ws', createProxyMiddleware({
 }));
 
 // Vue Router 支援
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
