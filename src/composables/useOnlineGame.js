@@ -2,7 +2,7 @@ import { ref, reactive } from 'vue';
 
 export function useOnlineGame() {
   const socket = ref(null);
-  const SERVER_URL = import.meta.env.VITE_WS_URL;
+  const SERVER_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`;
 
   socket.value = new WebSocket(SERVER_URL);
   
